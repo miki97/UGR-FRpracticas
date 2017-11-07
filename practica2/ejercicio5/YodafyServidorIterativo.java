@@ -41,7 +41,7 @@ public class YodafyServidorIterativo {
 				// argumento el nuevo socket, para que realice el procesamiento
 				// Este esquema permite que se puedan usar hebras más fácilmente.
 				ProcesadorYodafy procesador=new ProcesadorYodafy(socketServicio);
-				procesador.procesa();
+				procesador.start();
 				
 			} while (true);
 			

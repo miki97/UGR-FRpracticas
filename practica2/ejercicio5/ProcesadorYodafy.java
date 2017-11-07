@@ -16,7 +16,7 @@ import java.io.InputStreamReader;
 // Nota: si esta clase extendiera la clase Thread, y el procesamiento lo hiciera el método "run()",
 // ¡Podríamos realizar un procesado concurrente!
 //
-public class ProcesadorYodafy {
+public class ProcesadorYodafy extends Thread {
 	// Referencia a un socket para enviar/recibir las peticiones/respuestas
 	private Socket socketServicio;
 	// stream de lectura (por aquí se recibe lo que envía el cliente)
@@ -39,7 +39,7 @@ public class ProcesadorYodafy {
 
 
 	// Aquí es donde se realiza el procesamiento realmente:
-	void procesa(){
+	void run(){
 
 		// Como máximo leeremos un bloque de 1024 bytes. Esto se puede modificar.
 		//byte [] datosRecibidos=new byte[1024];
