@@ -13,7 +13,7 @@ import java.net.Socket;
 public class YodafyServidorIterativo {
 
 	public static void main(String[] args) {
-		ServerSocket socketServidor;
+		DatagramSocket socketServidor;
 		// Puerto de escucha
 		int port=8989;
 		// array de bytes auxiliar para recibir o enviar datos.
@@ -38,11 +38,11 @@ public class YodafyServidorIterativo {
 				//Socket socketServicio = socketServidor.accept();
 				//////////////////////////////////////////////////
 				paquete = new DatagramPacket(buffer, buffer.length);
-				socketServidor.reiceve(paquete);
+				socketServidor.receive(paquete);
 				// Creamos un objeto de la clase ProcesadorYodafy, pasándole como 
 				// argumento el nuevo socket, para que realice el procesamiento
 				// Este esquema permite que se puedan usar hebras más fácilmente.
-				ProcesadorYodafy procesador=new ProcesadorYodafy(socketServicio);
+				ProcesadorYodafy procesador=new ProcesadorYodafy(paquete);
 				procesador.procesa();
 				
 			} while (true);
