@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Random;
+import java.util.ArrayList;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -30,7 +31,7 @@ public class ProcesadorYodafy extends Thread {
 	private ArrayList<String> definiciones;
 	private int contar_completas=0;
 	private ArrayList<Integer> contestadas;
-	private ArraList<String> respuestas;
+	private ArrayList<String> respuestas;
 
 	// Constructor que tiene como parámetro una referencia al socket abierto en por otra clase
 	public ProcesadorYodafy(Socket socketServicio) {
@@ -39,7 +40,7 @@ public class ProcesadorYodafy extends Thread {
 
 
 	// Aquí es donde se realiza el procesamiento realmente:
-	void run(){
+	public void run(){
 
 		// Como máximo leeremos un bloque de 1024 bytes. Esto se puede modificar.
 		//byte [] datosRecibidos=new byte[1024];
@@ -58,8 +59,8 @@ public class ProcesadorYodafy extends Thread {
 			BufferedReader inReader = new BufferedReader
 			(new InputStreamReader(socketServicio.getInputStream()));
 			PrintWriter outPrinter = new PrintWriter(socketServicio.getOutputStream(),true);
-			// Lee la frase a Yodaficar:
-			////////////////////////////////////////////////////////
+			
+
 			// read ... datosRecibidos.. (Completar)
 			//bytesRecibidos = inputStream.read(datosRecibidos);
 			String peticion =inReader.readLine();
@@ -67,22 +68,22 @@ public class ProcesadorYodafy extends Thread {
 
 			if(peticion == "play"){
 				inicializar();
-				while(contar_completa <25){
+				while(contar_completas <25){
 					outPrinter.println(imprimirRosco());
 					char letra = (char) (puntero +65);
-					outPrinter.println(letra+ ": " + definiciones[puntero]);
+					outPrinter.println(letra+ ": " + definiciones.get(puntero));
 					
 					peticion=inReader.readLine();
 					
-					if(peticion == respuestas[puntero]){
+					if(peticion == respuestas.get(puntero)){
 						contar_completas++;
-						contestadas[puntero] = 1;
+						contestadas.set(puntero,1);
 						outPrinter.println("CORRECTO!!!!!!!!!!");
 					}
 					else if( peticion != "pasapalabra"){
-						contestadas[puntero]=2;
+						contestadas.set(puntero,2);
 						contar_completas++;
-						outPrinter.println("OHHHHH ERRORR!! La respuesta correcta era " + respuestas[puntero]);
+						outPrinter.println("OHHHHH ERRORR!! La respuesta correcta era " + respuestas.get(puntero));
 					}	
 					siguientePuntero();
 
@@ -102,11 +103,11 @@ public class ProcesadorYodafy extends Thread {
 	}
 
 	
-	private siguientePuntero(){
+	private void siguientePuntero(){
 		boolean encontrado = false;
 		while(!encontrado){
 			puntero= (puntero+1)%25;
-			if(contestada[puntero] == 0){
+			if(contestadas.get(puntero) == 0){
 				encontrado=true;
 			}
 		}
@@ -117,99 +118,105 @@ public class ProcesadorYodafy extends Thread {
 		/////esto imprime un triangulo
 		//// creo que el rosco lo mas facil es hacerlo como un rombo
 		int x = 4;
-        int y = x*2;
+		int y = x*2;
+		String rosco = new String();
+
         for(int contador= 0; contador<=x; contador++)
         {
             for(int espacios = x - 1; espacios >=contador; espacios-- )
             {
-                System.out.print(" ");
+                rosco += " ";
             }
             for(int asteriscos= 0; asteriscos<= (1*contador + contador); asteriscos++)
             {
-                System.out.print("*");
+                rosco = rosco + "*";
             }
-            System.out.println();
+            //System.out.println();
  
-        }
+		}
+		return rosco;
 	}
-	private inicializar(){
+	private void inicializar(){
+
 		definiciones = new ArrayList();
-		respuestas = new ArraList();
-		contestadas = new ArraList(25,0);
-		definiciones.push_back("No murado, no cercado o no cerrado");
-		respuestas.push_back("abierto");
+		respuestas = new ArrayList();
+		contestadas = new ArrayList(25);
+		String cadena;
+		
+		definiciones.add("No murado, no cercado o no cerrado");
+		respuestas.add("abierto");
 
-		definiciones.push_back("Herramienta formada por una barra metálica con la punta en espiral, para hacer agujeros en material duro");
-		respuestas.push_back("broca");
+		definiciones.add("Herramienta formada por una barra metálica con la punta en espiral, para hacer agujeros en material duro");
+		respuestas.add("broca");
 
-		definiciones.push_back("Cosa apreciable que se adquiere a poca costa");
-		respuestas.push_back("chollo");
+		definiciones.add("Cosa apreciable que se adquiere a poca costa");
+		respuestas.add("chollo");
 
-		definiciones.push_back("Conjunto de dientes, muelas y colmillos que tiene en la boca una persona o un animal");
-		respuestas.push_back("dentadura");
+		definiciones.add("Conjunto de dientes, muelas y colmillos que tiene en la boca una persona o un animal");
+		respuestas.add("dentadura");
 
-		definiciones.push_back("Hacer uso por primera vez de algo");
-		respuestas.push_back("estrenar");
+		definiciones.add("Hacer uso por primera vez de algo");
+		respuestas.add("estrenar");
 
-		definiciones.push_back("Tratamiento de las enfermedades o lesiones por medio de elementos mecánicos, como el masaje o la gimnasia");
-		respuestas.push_back("fisioterapia");
+		definiciones.add("Tratamiento de las enfermedades o lesiones por medio de elementos mecánicos, como el masaje o la gimnasia");
+		respuestas.add("fisioterapia");
 
-		definiciones.push_back("Gran porción de mar que se interna en la tierra entre dos cabos");
-		respuestas.push_back("golfo");
+		definiciones.add("Gran porción de mar que se interna en la tierra entre dos cabos");
+		respuestas.add("golfo");
 
-		definiciones.push_back("Restablecer el grado de humedad normal de la piel u otros tejidos");
-		respuestas.push_back("hidratar");
+		definiciones.add("Restablecer el grado de humedad normal de la piel u otros tejidos");
+		respuestas.add("hidratar");
 
-		definiciones.push_back("País europeo con capital en Dublín");
-		respuestas.push_back("irlanda");
+		definiciones.add("País europeo con capital en Dublín");
+		respuestas.add("irlanda");
 
-		definiciones.push_back("Grupo musical de funk que en 1996 publicó el álbum Travelling without Moving:");
-		respuestas.push_back("jamiroquai");
+		definiciones.add("Grupo musical de funk que en 1996 publicó el álbum Travelling without Moving:");
+		respuestas.add("jamiroquai");
 
-		definiciones.push_back("Viento procedente del este");
-		respuestas.push_back("levante");
+		definiciones.add("Viento procedente del este");
+		respuestas.add("levante");
 
-		definiciones.push_back("Persona que, por su humor tétrico, manifiesta aversión al trato humano");
-		respuestas.push_back("misantropo");
+		definiciones.add("Persona que, por su humor tétrico, manifiesta aversión al trato humano");
+		respuestas.add("misantropo");
 
-		definiciones.push_back("Natural del país europeo con capital en Oslo");
-		respuestas.push_back("oslo");
+		definiciones.add("Natural del país europeo con capital en Oslo");
+		respuestas.add("oslo");
 
-		definiciones.push_back("Contiene la ñ, parte de los árboles y matas que, cortada y hecha trozos, se emplea como combustible");
-		respuestas.push_back("leña");
+		definiciones.add("Contiene la ñ, parte de los árboles y matas que, cortada y hecha trozos, se emplea como combustible");
+		respuestas.add("leña");
 
-		definiciones.push_back("Anticuado, inadecuado a las circunstancias actuales");
-		respuestas.push_back("obsoleto");
+		definiciones.add("Anticuado, inadecuado a las circunstancias actuales");
+		respuestas.add("obsoleto");
 
-		definiciones.push_back("Se dice de un niño de muy corta edad:");
-		respuestas.push_back("pequeño");
+		definiciones.add("Se dice de un niño de muy corta edad:");
+		respuestas.add("pequeño");
 
-		definiciones.push_back("Contiene la Q, sitio poblado de árboles y matas");
-		respuestas.push_back("bosque");
+		definiciones.add("Contiene la Q, sitio poblado de árboles y matas");
+		respuestas.add("bosque");
 
-		definiciones.push_back("Espacio cercado en que combaten los boxeadores");
-		respuestas.push_back("ring");
+		definiciones.add("Espacio cercado en que combaten los boxeadores");
+		respuestas.add("ring");
 
-		definiciones.push_back("Falta de ruido");
-		respuestas.push_back("silencio");
+		definiciones.add("Falta de ruido");
+		respuestas.add("silencio");
 
-		definiciones.push_back("Silicato de magnesia que, en forma de polvo, se utiliza para la higiene y en la industria cosmética");
-		respuestas.push_back("talco");
+		definiciones.add("Silicato de magnesia que, en forma de polvo, se utiliza para la higiene y en la industria cosmética");
+		respuestas.add("talco");
 
-		definiciones.push_back("Apoderarse de una propiedad o de un derecho que legítimamente pertenece a otro, por lo general con violencia");
-		respuestas.push_back("usurpar");
+		definiciones.add("Apoderarse de una propiedad o de un derecho que legítimamente pertenece a otro, por lo general con violencia");
+		respuestas.add("usurpar");
 
-		definiciones.push_back(" Día que antecede inmediatamente a otro determinado, especialmente si es fiesta");
-		respuestas.push_back("vispera");
+		definiciones.add(" Día que antecede inmediatamente a otro determinado, especialmente si es fiesta");
+		respuestas.add("vispera");
 
-		definiciones.push_back("Contiene la X, hacer flexible algo, darle flexibilidad");
-		respuestas.push_back("flexibilizar");
+		definiciones.add("Contiene la X, hacer flexible algo, darle flexibilidad");
+		respuestas.add("flexibilizar");
 
-		definiciones.push_back("Contiene la Y.  Nombre propio del realizador que dirigió la película Revolver en 2005");
-		respuestas.push_back("ritchie");
+		definiciones.add("Contiene la Y.  Nombre propio del realizador que dirigió la película Revolver en 2005");
+		respuestas.add("ritchie");
 
-		definiciones.push_back("Segunda persona de singular del pretérito perfecto simple de indicativo del verbo zanjar");
-		respuestas.push_back("zanjaste");
+		definiciones.add("Segunda persona de singular del pretérito perfecto simple de indicativo del verbo zanjar");
+		respuestas.add("zanjaste");
 
 	}
 }
