@@ -28,13 +28,16 @@ public class YodafyClienteTCP {
 		Socket socketServicio=null;
 		
 		try {
-			// Creamos un socket que se conecte a "hist" y "port":
+			// Creamos un socket que se conecte a "host" y "port":
 			//////////////////////////////////////////////////////
 			socketServicio= new Socket(host, port);
 			//////////////////////////////////////////////////////			
 			
 			//InputStream inputStream = socketServicio.getInputStream();
 			//OutputStream outputStream = socketServicio.getOutputStream();
+
+
+			//obtenemos los flujos en modo texto
 			BufferedReader inReader = new BufferedReader
 			(new InputStreamReader(socketServicio.getInputStream()));
 			PrintWriter outPrinter = new PrintWriter(socketServicio.getOutputStream(),true);
@@ -43,9 +46,8 @@ public class YodafyClienteTCP {
 			// a un array de bytes:
 			//buferEnvio="Al monte del volcán debes ir sin demora".getBytes();
 			
-			// Enviamos el array por el outputStream;
+			// Enviamos el array por el outputPrinter
 			//////////////////////////////////////////////////////
-			// ... .write ... (Completar)
 			outPrinter.println("Al monte del volcan debes ir sin demora");
 			//////////////////////////////////////////////////////
 			
@@ -53,7 +55,6 @@ public class YodafyClienteTCP {
 			// los enviará efectivamente cuando considere que tiene suficientes datos que enviar...
 			// Podemos usar "flush()" para obligar a TCP a que no espere para hacer el envío:
 			//////////////////////////////////////////////////////
-			// ... .flush(); (Completar)
 			outPrinter.flush();
 			//////////////////////////////////////////////////////
 			

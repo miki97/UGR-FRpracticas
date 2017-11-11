@@ -33,7 +33,7 @@ public class ProcesadorYodafy extends Thread {
 	}
 	
 	
-	// Aquí es donde se realiza el procesamiento realmente:
+	// Aquí es donde se realiza el procesamiento realmente, usaremos el metodo run ya implementamos hebras:
 	public void run(){
 		
 		// Como máximo leeremos un bloque de 1024 bytes. Esto se puede modificar.
@@ -49,20 +49,17 @@ public class ProcesadorYodafy extends Thread {
 			// Obtiene los flujos de escritura/lectura
 			//inputStream=socketServicio.getInputStream();
 			//outputStream=socketServicio.getOutputStream();
-									
+			//obtenemos los flujos de texto
 			BufferedReader inReader = new BufferedReader
 			(new InputStreamReader(socketServicio.getInputStream()));
 			PrintWriter outPrinter = new PrintWriter(socketServicio.getOutputStream(),true);
 			// Lee la frase a Yodaficar:
 			////////////////////////////////////////////////////////
-			// read ... datosRecibidos.. (Completar)
-			//bytesRecibidos = inputStream.read(datosRecibidos);
+			//recibimos la frase que se quiere trasformar
 			String peticion =inReader.readLine();
 			////////////////////////////////////////////////////////
 			
 			// Yoda hace su magia:
-			// Creamos un String a partir de un array de bytes de tamaño "bytesRecibidos":
-			//String peticion=new String(datosRecibidos,0,bytesRecibidos);
 			// Yoda reinterpreta el mensaje:
 			String respuesta=yodaDo(peticion);
 			// Convertimos el String de respuesta en una array de bytes:
@@ -71,10 +68,12 @@ public class ProcesadorYodafy extends Thread {
 			// Enviamos la traducción de Yoda:
 			////////////////////////////////////////////////////////
 			// ... write ... datosEnviar... datosEnviar.length ... (Completar)
+			//usamos directamente el canal de modo texto
 			sleep(10000);
 			outPrinter.println(respuesta);
 			////////////////////////////////////////////////////////
 			
+			socketServicio.close();
 			
 			
 		} catch (Exception e) { //e puesto una Exception para poder dormir la hebra

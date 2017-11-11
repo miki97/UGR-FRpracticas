@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 // YodafyServidorIterativo
 // (CC) jjramos, 2012
 //
-public class YodafyServidorIterativo {
+public class YodafyServidorConcurrente {
 
 	public static void main(String[] args) {
 		ServerSocket socketServidor;
@@ -41,6 +41,7 @@ public class YodafyServidorIterativo {
 				// argumento el nuevo socket, para que realice el procesamiento
 				// Este esquema permite que se puedan usar hebras más fácilmente.
 				ProcesadorYodafy procesador=new ProcesadorYodafy(socketServicio);
+				//metodo start() ya que ahora usamos las hebras para que sea concurrente
 				procesador.start();
 				
 			} while (true);
