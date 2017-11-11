@@ -50,6 +50,7 @@ public class ProcesadorYodafy {
 			//inputStream=socketServicio.getInputStream();
 			//outputStream=socketServicio.getOutputStream();
 			
+			//obtenemos los flujos en modo texto 
 			BufferedReader inReader = new BufferedReader
 			(new InputStreamReader(socketServicio.getInputStream()));
 			PrintWriter outPrinter = new PrintWriter(socketServicio.getOutputStream(),true);
