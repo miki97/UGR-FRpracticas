@@ -16,12 +16,7 @@ import java.util.Random;
 // ¡Podríamos realizar un procesado concurrente! 
 //
 public class ProcesadorYodafy {
-	// Referencia a un socket para enviar/recibir las peticiones/respuestas
-	//private Socket socketServicio;
-	// stream de lectura (por aquí se recibe lo que envía el cliente)
-	//private InputStream inputStream;
-	// stream de escritura (por aquí se envía los datos al cliente)
-	//private OutputStream outputStream;
+	//socket y paquete para el envio UDP
 	private DatagramPacket paquete;
 	private DatagramSocket socketServicio;
 	// Para que la respuesta sea siempre diferente, usamos un generador de números aleatorios.
@@ -39,23 +34,16 @@ public class ProcesadorYodafy {
 		
 		// Como máximo leeremos un bloque de 1024 bytes. Esto se puede modificar.
 		byte [] datosRecibidos=new byte[1024];
-		int bytesRecibidos=0;
 		
 		// Array de bytes para enviar la respuesta. Podemos reservar memoria cuando vayamos a enviarka:
 		byte [] datosEnviar;
 		
 		
 		try {
-			// Obtiene los flujos de escritura/lectura
-			//inputStream=socketServicio.getInputStream();
-			//outputStream=socketServicio.getOutputStream();
-			
-			// Lee la frase a Yodaficar:
-			////////////////////////////////////////////////////////
-			// read ... datosRecibidos.. (Completar)
-			//bytesRecibidos = inputStream.read(datosRecibidos);
-			////////////////////////////////////////////////////////
+			//obtenemos los datos del paquete que nos pasa el servidor al creer un objeto de 
+			//este tipo
 			datosRecibidos=paquete.getData();
+			
 			// Yoda hace su magia:
 			// Creamos un String a partir de un array de bytes de tamaño "bytesRecibidos":
 			String peticion= new String(datosRecibidos,0,datosRecibidos.length);
@@ -64,6 +52,7 @@ public class ProcesadorYodafy {
 			// Convertimos el String de respuesta en una array de bytes:
 			datosEnviar=respuesta.getBytes();
 			
+			//creamos un socket UDP y el paquete para mandarlo al mismo origen del paquete inicial
 			socketServicio = new DatagramSocket();
 			paquete = new DatagramPacket(datosEnviar,datosEnviar.length, paquete.getAddress(), paquete.getPort());
 			socketServicio.send(paquete);
@@ -72,7 +61,7 @@ public class ProcesadorYodafy {
 			// ... write ... datosEnviar... datosEnviar.length ... (Completar)
 			//outputStream.write(datosEnviar,0,datosEnviar.length);
 			////////////////////////////////////////////////////////
-			
+			socketServicio.close();
 			
 			
 		} catch (IOException e) {
