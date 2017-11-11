@@ -69,7 +69,7 @@ public class ProcesadorYodafy extends Thread {
 			////////////////////////////////////////////////////////
 			// ... write ... datosEnviar... datosEnviar.length ... (Completar)
 			//usamos directamente el canal de modo texto
-			sleep(10000);
+			//sleep(10000);
 			outPrinter.println(respuesta);
 			////////////////////////////////////////////////////////
 			
