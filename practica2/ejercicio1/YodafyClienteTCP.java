@@ -38,11 +38,10 @@ public class YodafyClienteTCP {
 			
 			// Si queremos enviar una cadena de caracteres por un OutputStream, hay que pasarla primero
 			// a un array de bytes:
-			buferEnvio="Al monte del volcán debes ir sin demora".getBytes();
+			buferEnvio="Al monte del volcan debes ir sin demora".getBytes();
 			
 			// Enviamos el array por el outputStream;
 			//////////////////////////////////////////////////////
-			// ... .write ... (Completar)
 			outputStream.write(buferEnvio,0,buferEnvio.length);
 			//////////////////////////////////////////////////////
 			
@@ -50,14 +49,12 @@ public class YodafyClienteTCP {
 			// los enviará efectivamente cuando considere que tiene suficientes datos que enviar...
 			// Podemos usar "flush()" para obligar a TCP a que no espere para hacer el envío:
 			//////////////////////////////////////////////////////
-			// ... .flush(); (Completar)
 			outputStream.flush();
 			//////////////////////////////////////////////////////
 			
 			// Leemos la respuesta del servidor. Para ello le pasamos un array de bytes, que intentará
 			// rellenar. El método "read(...)" devolverá el número de bytes leídos.
 			//////////////////////////////////////////////////////
-			// bytesLeidos ... .read... buferRecepcion ; (Completar)
 			bytesLeidos = inputStream.read(buferRecepcion);
 			//////////////////////////////////////////////////////
 			
@@ -70,7 +67,6 @@ public class YodafyClienteTCP {
 			// Una vez terminado el servicio, cerramos el socket (automáticamente se cierran
 			// el inpuStream  y el outputStream)
 			//////////////////////////////////////////////////////
-			// ... close(); (Completar)
 			socketServicio.close();
 			//////////////////////////////////////////////////////
 			
