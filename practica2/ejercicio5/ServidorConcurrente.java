@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 // YodafyServidorIterativo
 // (CC) jjramos, 2012
 //
-public class YodafyServidorIterativo {
+public class ServidorConcurrente {
 
 	public static void main(String[] args) {
 		ServerSocket socketServidor;

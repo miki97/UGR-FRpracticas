@@ -10,8 +10,9 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
-public class YodafyClienteTCP {
+public class ClientePasapalabra {
 
 	public static void main(String[] args) {
 		
@@ -26,15 +27,15 @@ public class YodafyClienteTCP {
 		
 		// Socket para la conexión TCP
 		Socket socketServicio=null;
-		
+		Scanner capt = new Scanner(System.in);
+
 		try {
-			// Creamos un socket que se conecte a "hist" y "port":
+			// Creamos un socket que se conecte a "host" y "port":
 			//////////////////////////////////////////////////////
 			socketServicio= new Socket(host, port);
 			//////////////////////////////////////////////////////			
 			
-			//InputStream inputStream = socketServicio.getInputStream();
-			//OutputStream outputStream = socketServicio.getOutputStream();
+			//obtener los flujos en modo texto
 			BufferedReader inReader = new BufferedReader
 			(new InputStreamReader(socketServicio.getInputStream()));
 			PrintWriter outPrinter = new PrintWriter(socketServicio.getOutputStream(),true);
@@ -46,7 +47,7 @@ public class YodafyClienteTCP {
 			// Enviamos el array por el outputStream;
 			//////////////////////////////////////////////////////
 			// ... .write ... (Completar)
-			outPrinter.println("Al monte del volcan debes ir sin demora");
+			outPrinter.println("play");
 			//////////////////////////////////////////////////////
 			
 			// Aunque le indiquemos a TCP que queremos enviar varios arrays de bytes, sólo
@@ -56,6 +57,28 @@ public class YodafyClienteTCP {
 			// ... .flush(); (Completar)
 			outPrinter.flush();
 			//////////////////////////////////////////////////////
+
+			String recibido = inReader.readLine();
+			System.out.println(recibido);
+			if(recibido.equals("comenzemos")){
+				System.out.println("COMIENZA EL JUEGO");
+				while(!recibido.equals("fin del juego")){
+					//imprimir rosco
+					System.out.println(inReader.readLine());
+					//imprimir pregunta
+					System.out.println(inReader.readLine());
+					//captar y enviar respuesta
+					String respuesta = capt.nextLine();
+					System.out.println(respuesta);
+					outPrinter.println(respuesta);
+					//imprimir resultado
+					System.out.println(inReader.readLine());
+
+				}
+
+
+
+			}
 			
 			// Leemos la respuesta del servidor. Para ello le pasamos un array de bytes, que intentará
 			// rellenar. El método "read(...)" devolverá el número de bytes leídos.
