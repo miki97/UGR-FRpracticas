@@ -33,115 +33,11 @@ public class ProcesadorYodafy extends Thread {
 	private int contar_completas=0;
 	private ArrayList<Integer> contestadas;
 	private ArrayList<String> respuestas;
+	private int acertadas=0;
 
 	// Constructor que tiene como parámetro una referencia al socket abierto en por otra clase
 	public ProcesadorYodafy(Socket socketServicio) {
 		this.socketServicio=socketServicio;
-	}
-
-
-	// Aquí es donde se realiza el procesamiento realmente:
-	public void run(){
-
-		// Como máximo leeremos un bloque de 1024 bytes. Esto se puede modificar.
-		//byte [] datosRecibidos=new byte[1024];
-		//int bytesRecibidos=0;
-
-
-		// Array de bytes para enviar la respuesta. Podemos reservar memoria cuando vayamos a enviarka:
-		//byte [] datosEnviar;
-
-
-		try {
-			// Obtiene los flujos de escritura/lectura
-			//inputStream=socketServicio.getInputStream();
-			//outputStream=socketServicio.getOutputStream();
-
-			BufferedReader inReader = new BufferedReader
-			(new InputStreamReader(socketServicio.getInputStream()));
-			PrintWriter outPrinter = new PrintWriter(socketServicio.getOutputStream(),true);
-			
-
-			// read ... datosRecibidos.. (Completar)
-			//bytesRecibidos = inputStream.read(datosRecibidos);
-			String peticion =inReader.readLine();
-			////////////////////////////////////////////////////////
-			System.out.println(peticion);
-			if(peticion.equals("play")){
-				outPrinter.println("comenzemos");
-				inicializar();
-				while(contar_completas <25){
-					outPrinter.println(imprimirRosco());
-					char letra = (char) (puntero +65);
-					outPrinter.println(letra+ ": " + definiciones.get(puntero));
-					
-					peticion=inReader.readLine();
-					
-					if(peticion.equals(respuestas.get(puntero))){
-						contar_completas++;
-						contestadas.set(puntero,1);
-						outPrinter.println("CORRECTO!!!!!!!!!!");
-					}
-					else if( !peticion.equals("pasapalabra")){
-						contestadas.set(puntero,2);
-						contar_completas++;
-						outPrinter.println("OHHHHH ERRORR!! La respuesta correcta era " + respuestas.get(puntero));
-					}
-					else{
-						outPrinter.println("CONTINUAMOS CON LA SIGUIENTE");
-					}
-					siguientePuntero();
-
-			  }
-
-			}
-
-			outPrinter.println("fin del juegoo");
-			////////////////////////////////////////////////////////
-
-
-
-		} catch (IOException e) {
-			System.err.println("Error al obtener los flujso de entrada/salida.");
-		}
-
-	}
-
-	
-	private void siguientePuntero(){
-		boolean encontrado = false;
-		while(!encontrado){
-			puntero= (puntero+1)%25;
-			if(contestadas.get(puntero) == 0){
-				encontrado=true;
-			}
-		}
-
-	}
-
-	private String imprimirRosco(){
-		/////esto imprime un triangulo
-		//// creo que el rosco lo mas facil es hacerlo como un rombo
-		int x = 4;
-		int y = x*2;
-		String rosco = new String();
-
-        for(int contador= 0; contador<=x; contador++)
-        {
-            for(int espacios = x - 1; espacios >=contador; espacios-- )
-            {
-                rosco += " ";
-            }
-            for(int asteriscos= 0; asteriscos<= (1*contador + contador); asteriscos++)
-            {
-                rosco = rosco + "*";
-            }
-            //System.out.println();
- 
-		}
-		return rosco;
-	}
-	private void inicializar(){
 		definiciones = new ArrayList<String>();
 		respuestas = new ArrayList<String>();
 		contestadas = new ArrayList<Integer>();
@@ -186,7 +82,7 @@ public class ProcesadorYodafy extends Thread {
 		respuestas.add("misantropo");
 
 		definiciones.add("Natural del país europeo con capital en Oslo");
-		respuestas.add("oslo");
+		respuestas.add("noruego");
 
 		definiciones.add("Contiene la ñ, parte de los árboles y matas que, cortada y hecha trozos, se emplea como combustible");
 		respuestas.add("leña");
@@ -219,10 +115,143 @@ public class ProcesadorYodafy extends Thread {
 		respuestas.add("flexibilizar");
 
 		definiciones.add("Contiene la Y.  Nombre propio del realizador que dirigió la película Revolver en 2005");
-		respuestas.add("ritchie");
+		respuestas.add("guy");
 
 		definiciones.add("Segunda persona de singular del pretérito perfecto simple de indicativo del verbo zanjar");
 		respuestas.add("zanjaste");
+	}
+
+
+	// Aquí es donde se realiza el procesamiento realmente:
+	public void run(){
+
+		// Como máximo leeremos un bloque de 1024 bytes. Esto se puede modificar.
+		//byte [] datosRecibidos=new byte[1024];
+		//int bytesRecibidos=0;
+
+
+		// Array de bytes para enviar la respuesta. Podemos reservar memoria cuando vayamos a enviarka:
+		//byte [] datosEnviar;
+
+
+		try {
+			// Obtiene los flujos de escritura/lectura
+			//inputStream=socketServicio.getInputStream();
+			//outputStream=socketServicio.getOutputStream();
+
+			BufferedReader inReader = new BufferedReader
+			(new InputStreamReader(socketServicio.getInputStream()));
+			PrintWriter outPrinter = new PrintWriter(socketServicio.getOutputStream(),true);
+
+			// read ... datosRecibidos.. (Completar)
+			//bytesRecibidos = inputStream.read(datosRecibidos);
+			String peticion =inReader.readLine();
+			////////////////////////////////////////////////////////
+			//System.out.println(peticion);
+
+			if(peticion.equals("play")){
+				outPrinter.println("comenzemos");
+
+				while(contar_completas < 25){
+					outPrinter.println(imprimirRosco());
+					//para saltarnos la K
+					char letra;
+					if(puntero < 10 || puntero > 13){
+						System.out.println("jjojo");
+						letra = (char)(puntero +65);
+					}
+					else if(puntero == 13){
+						letra = 'N';
+					}
+					else{
+						letra = (char)(puntero +66);
+					}
+					outPrinter.println(letra +": " + definiciones.get(puntero));
+					
+					peticion=inReader.readLine();
+					
+					if(peticion.equals(respuestas.get(puntero))){
+						contar_completas++;
+						acertadas++;
+						contestadas.set(puntero,1);
+						if(contar_completas == 25){
+							outPrinter.println("FIN DEL JUEGO");
+						}
+						else{
+							outPrinter.println("CORRECTO!!!!!!!!!!");
+						}
+					}
+					else if( !peticion.equals("pasapalabra")){
+						contestadas.set(puntero,2);
+						contar_completas++;
+						if(contar_completas == 25){
+							outPrinter.println("FIN DEL JUEGO");
+						}
+						else{
+							outPrinter.println("OHHHHH ERRORR!! La respuesta correcta era " + respuestas.get(puntero));
+						}
+						
+					}
+					else{
+						outPrinter.println("CONTINUAMOS CON LA SIGUIENTE");
+					}
+					System.out.println(contar_completas);
+					siguientePuntero();
+
+			  }
+
+			}
+
+			if(acertadas == 25){
+				outPrinter.println("Enhorabuena has ganado y te llevas el bote");
+			}
+			else{
+				outPrinter.println("Lo siento has perdido pero has acertado " + Integer.toString(acertadas));
+			}
+			
+			////////////////////////////////////////////////////////
+
+
+
+		} catch (IOException e) {
+			System.err.println("Error al obtener los flujso de entrada/salida.");
+		}
 
 	}
+
+	
+	private void siguientePuntero(){
+		boolean encontrado = false;
+		while(contar_completas != 25 && !encontrado){
+			puntero= (puntero+1)%25;
+			if(contestadas.get(puntero) == 0){
+				encontrado=true;
+			}
+		}
+
+	}
+
+	private String imprimirRosco(){
+		/////esto imprime un triangulo
+		//// creo que el rosco lo mas facil es hacerlo como un rombo
+		int x = 4;
+		int y = x*2;
+		String rosco = new String();
+
+        for(int contador= 0; contador<=x; contador++)
+        {
+            for(int espacios = x - 1; espacios >=contador; espacios-- )
+            {
+                rosco += " ";
+            }
+            for(int asteriscos= 0; asteriscos<= (1*contador + contador); asteriscos++)
+            {
+                rosco = rosco + "*";
+            }
+            //System.out.println();
+ 
+		}
+		return rosco;
+	}
+	
 }
