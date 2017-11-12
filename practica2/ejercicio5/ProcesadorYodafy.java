@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Random;
+import java.util.ArrayList;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -59,8 +60,8 @@ public class ProcesadorYodafy extends Thread {
 			BufferedReader inReader = new BufferedReader
 			(new InputStreamReader(socketServicio.getInputStream()));
 			PrintWriter outPrinter = new PrintWriter(socketServicio.getOutputStream(),true);
-			// Lee la frase a Yodaficar:
-			////////////////////////////////////////////////////////
+			
+
 			// read ... datosRecibidos.. (Completar)
 			//bytesRecibidos = inputStream.read(datosRecibidos);
 			String peticion =inReader.readLine();
@@ -122,21 +123,23 @@ public class ProcesadorYodafy extends Thread {
 		/////esto imprime un triangulo
 		//// creo que el rosco lo mas facil es hacerlo como un rombo
 		int x = 4;
-        int y = x*2;
+		int y = x*2;
+		String rosco = new String();
+
         for(int contador= 0; contador<=x; contador++)
         {
             for(int espacios = x - 1; espacios >=contador; espacios-- )
             {
-                System.out.print(" ");
+                rosco += " ";
             }
             for(int asteriscos= 0; asteriscos<= (1*contador + contador); asteriscos++)
             {
-                System.out.print("*");
+                rosco = rosco + "*";
             }
-            System.out.println();
+            //System.out.println();
  
 		}
-		return "hi";
+		return rosco;
 	}
 	private void inicializar(){
 		definiciones = new ArrayList<String>();
