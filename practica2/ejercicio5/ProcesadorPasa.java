@@ -1,8 +1,10 @@
 
-//
-// YodafyServidorIterativo
-// (CC) jjramos, 2012
-//
+/////
+// Procesador para el servidor del juego pasapalabra basado en TCP
+// Desarrollado por:
+//		Miguel Ángel López Robles
+// 		Jaime Frías Funes
+////////////
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -44,7 +46,7 @@ public class ProcesadorPasa extends Thread {
 		for(int i=0 ; i< 25 ;i = i+1){
 			contestadas.add(0);
 		}
-
+		//añadimos la definicion y la solucion para cada letra
 		definiciones.add("No murado, no cercado o no cerrado");
 		respuestas.add("abierto");
 
@@ -122,45 +124,40 @@ public class ProcesadorPasa extends Thread {
 	}
 
 
-	// Aquí es donde se realiza el procesamiento realmente:
+	// Aquí es donde se realiza el procesamiento realmente, metodo run porque implementamos 
+	//hebras
 	public void run(){
-
-		// Como máximo leeremos un bloque de 1024 bytes. Esto se puede modificar.
-		//byte [] datosRecibidos=new byte[1024];
-		//int bytesRecibidos=0;
-
-
-		// Array de bytes para enviar la respuesta. Podemos reservar memoria cuando vayamos a enviarka:
-		//byte [] datosEnviar;
-
 
 		try {
 			// Obtiene los flujos de escritura/lectura
-			//inputStream=socketServicio.getInputStream();
-			//outputStream=socketServicio.getOutputStream();
-
 			BufferedReader inReader = new BufferedReader
 			(new InputStreamReader(socketServicio.getInputStream()));
 			PrintWriter outPrinter = new PrintWriter(socketServicio.getOutputStream(),true);
 
-			// read ... datosRecibidos.. (Completar)
-			//bytesRecibidos = inputStream.read(datosRecibidos);
+			//recibimos le mensaje inicial que nos da el cliente, debera ser play 
+			//para poder comenzar el juego
 			String peticion =inReader.readLine();
 			////////////////////////////////////////////////////////
 			//System.out.println(peticion);
 
 			if(peticion.equals("play")){
+				//mandamos el mensaje de comenzamos para confirmar que atendemos la peticion
 				outPrinter.println("comenzemos");
 
+				//bucle que solo acabara cuando se hayan respondido todas
 				while(contar_completas < 25){
+					//imprimir el rosco
 					outPrinter.println(imprimirRosco());
-					//para saltarnos la K
+					// letra por la que vamos a jugar
 					char letra = convierteLetra(puntero);
 					
+					//mandamos el mensaje de la pregunta
 					outPrinter.println(letra +": " + definiciones.get(puntero));
 					
+					//leemos la respuesta
 					peticion=inReader.readLine();
 					
+					//comprobacion de si la respuesta es correcta o pasapalabra
 					if(peticion.equals(respuestas.get(puntero))){
 						contar_completas++;
 						acertadas++;
@@ -187,11 +184,13 @@ public class ProcesadorPasa extends Thread {
 						outPrinter.println("CONTINUAMOS CON LA SIGUIENTE");
 					}
 					//System.out.println(contar_completas);
+					//buscamos la siguiente palabra
 					siguientePuntero();
 
 			  }
 
 			}
+			//pasamos el resultado del rosco 
 			outPrinter.println(imprimirRosco());
 			if(acertadas == 25){
 				outPrinter.println("Enhorabuena has ganado y te llevas el bote");
@@ -210,7 +209,7 @@ public class ProcesadorPasa extends Thread {
 
 	}
 
-	
+	//funcion para situar el puntero en la siguiente letra para jugar
 	private void siguientePuntero(){
 		boolean encontrado = false;
 		while(contar_completas != 25 && !encontrado){
@@ -222,13 +221,15 @@ public class ProcesadorPasa extends Thread {
 
 	}
 	
+	//funcion para obtener la letra apartir del puntero
 	private char convierteLetra(int puntero){
 		char letra;
-		if(puntero < 10 || puntero > 13){
+		//intervalos validos por que tenemos que saltarnos la k y la w
+		if((puntero < 10 || puntero > 13) && puntero < 22){
 			letra = (char)(puntero +65);
 		}
-		else if(puntero == 13){
-			letra = 'N';
+		else if(puntero == 13){	//añadimos la ñ por que no esa en el codigo ascii
+			letra = 'Ñ';
 		}
 		else{
 			letra = (char)(puntero +66);
@@ -236,7 +237,7 @@ public class ProcesadorPasa extends Thread {
 		return letra;
 	}
 	
-
+	//funcion para imprimir el rosco aunque sea como un rombo
 	private String imprimirRosco(){
 		String rosco ="";
 		int n = 7;
@@ -251,6 +252,7 @@ public class ProcesadorPasa extends Thread {
 			for (int j = 0; j < 2*i+1; ++j){
 				//Condición para imprimir solo los bordes.
 				if (i==0){
+					rosco += estadoPregunta(24);
 					rosco += estadoPregunta(0);
 				}
 				else if(j==0) {
@@ -274,7 +276,7 @@ public class ProcesadorPasa extends Thread {
             for (int i = 0; i < 2*j+1; ++i) {
                 //Condición para imprimir solo los bordes.
 				if (j==0){
-					rosco += estadoPregunta(14);
+					rosco += estadoPregunta(12);
 				}
 				else if(i==0){
 					rosco += estadoPregunta(25-(cont+1));
@@ -291,6 +293,8 @@ public class ProcesadorPasa extends Thread {
 		return rosco;
 	}
 
+	//funcion que nos devuelve el estado de una letra 1 si acertada
+	// 0 si error o la letra si aun no a sido contestada
 	private char estadoPregunta(int puntero){
 		if(contestadas.get(puntero) == 1)
 			return '1';

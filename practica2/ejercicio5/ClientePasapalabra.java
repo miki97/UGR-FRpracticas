@@ -41,9 +41,7 @@ public class ClientePasapalabra {
 
 			// enviamos el codigo play para indicar que deseamos jugar y que se inicie el servicio
 			outPrinter.println("play");
-			//////////////////////////////////////////////////////
 			outPrinter.flush();
-			//////////////////////////////////////////////////////
 			// recibimos el mensaje de respuesta del servidor indicando que atiende nuestra peticion
 			String recibido = inReader.readLine();
 			//System.out.println(recibido);
@@ -64,7 +62,7 @@ public class ClientePasapalabra {
 
 					//captar y enviar respuesta
 					String respuesta = capt.nextLine();
-					System.out.println(respuesta);
+					//System.out.println(respuesta);
 					outPrinter.println(respuesta);
 
 					//imprimir resultado
