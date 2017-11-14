@@ -155,17 +155,8 @@ public class ProcesadorYodafy extends Thread {
 				while(contar_completas < 25){
 					outPrinter.println(imprimirRosco());
 					//para saltarnos la K
-					char letra;
-					if(puntero < 10 || puntero > 13){
-						System.out.println("jjojo");
-						letra = (char)(puntero +65);
-					}
-					else if(puntero == 13){
-						letra = 'N';
-					}
-					else{
-						letra = (char)(puntero +66);
-					}
+					char letra = convierteLetra(puntero);
+					
 					outPrinter.println(letra +": " + definiciones.get(puntero));
 					
 					peticion=inReader.readLine();
@@ -195,13 +186,13 @@ public class ProcesadorYodafy extends Thread {
 					else{
 						outPrinter.println("CONTINUAMOS CON LA SIGUIENTE");
 					}
-					System.out.println(contar_completas);
+					//System.out.println(contar_completas);
 					siguientePuntero();
 
 			  }
 
 			}
-
+			outPrinter.println(imprimirRosco());
 			if(acertadas == 25){
 				outPrinter.println("Enhorabuena has ganado y te llevas el bote");
 			}
@@ -230,28 +221,76 @@ public class ProcesadorYodafy extends Thread {
 		}
 
 	}
-
-	private String imprimirRosco(){
-		/////esto imprime un triangulo
-		//// creo que el rosco lo mas facil es hacerlo como un rombo
-		int x = 4;
-		int y = x*2;
-		String rosco = new String();
-
-        for(int contador= 0; contador<=x; contador++)
-        {
-            for(int espacios = x - 1; espacios >=contador; espacios-- )
-            {
-                rosco += " ";
-            }
-            for(int asteriscos= 0; asteriscos<= (1*contador + contador); asteriscos++)
-            {
-                rosco = rosco + "*";
-            }
-            //System.out.println();
- 
+	
+	private char convierteLetra(int puntero){
+		char letra;
+		if(puntero < 10 || puntero > 13){
+			letra = (char)(puntero +65);
 		}
-		return rosco;
+		else if(puntero == 13){
+			letra = 'N';
+		}
+		else{
+			letra = (char)(puntero +66);
+		}
+		return letra;
 	}
 	
+
+	private String imprimirRosco(){
+		String rosco ="";
+		int n = 7;
+		//Se hace con un preincremento ++j.
+		for (int i = 0; i < n; ++i) {
+			//Cada primer for, se hace un salto de línea.
+			rosco += "\n";
+			//Utilizamos dos "for" para lograr la forma.
+			for (int j = 0; j < n-i-1; ++j) {                      
+				rosco+= " ";           
+			}
+			for (int j = 0; j < 2*i+1; ++j){
+				//Condición para imprimir solo los bordes.
+				if (i==0){
+					rosco += 'A';
+				}
+				else if(j==0) {
+					rosco += convierteLetra(25-(i+1));	
+				} else if(j==2*i){
+					rosco += convierteLetra(i);
+				}	
+				else {
+					rosco+= " ";
+				}                
+			}            
+		}
+		//Se utiliza otro grupo de for para lograr la forma de "rombo"
+		int cont=n;
+		for (int j = n-2; j >= 0; --j) {
+            rosco += "\n";
+            //Utilizamos dos "for" para lograr la forma.
+            for (int i = 0; i < n-j-1; ++i) {                
+				rosco+= " ";
+            }
+            for (int i = 0; i < 2*j+1; ++i) {
+                //Condición para imprimir solo los bordes.
+				if (j==0){
+					rosco += 'N';
+				}
+				else if(i==0){
+					rosco += convierteLetra(25-(cont+1));
+				}
+				else if(i==2*j) {
+                    rosco += convierteLetra(cont);
+                } else {
+                    rosco+= " ";
+                }                
+			}
+			cont++;
+        }    
+		rosco+= "\n";
+		return rosco;
+	}
 }
+
+
+
