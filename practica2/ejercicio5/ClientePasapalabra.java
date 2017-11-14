@@ -59,12 +59,17 @@ public class ClientePasapalabra {
 			//////////////////////////////////////////////////////
 
 			String recibido = inReader.readLine();
-			System.out.println(recibido);
+			//System.out.println(recibido);
 			if(recibido.equals("comenzemos")){
 				System.out.println("COMIENZA EL JUEGO");
 				while(!recibido.equals("FIN DEL JUEGO")){
 					//imprimir rosco
-					System.out.println(inReader.readLine());
+					String rosco="";
+					for(int i = 0 ; i <=14 ; i++){
+						rosco += inReader.readLine();
+						rosco+= "\n";
+					}
+					System.out.println(rosco);
 					//imprimir pregunta
 					System.out.println(inReader.readLine());
 					//captar y enviar respuesta
@@ -90,6 +95,12 @@ public class ClientePasapalabra {
 			
 			// MOstremos la cadena de caracteres recibidos:
 			System.out.println("El resultado del rosco es: ");
+			String rosco="";
+			for(int i = 0 ; i <=14 ; i++){
+				rosco += inReader.readLine();
+				rosco+= "\n";
+			}
+			System.out.println(rosco);
 			//for(int i=0;i<bytesLeidos;i++){
 			System.out.println(inReader.readLine());
 			//}
