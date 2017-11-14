@@ -1,7 +1,9 @@
-//
-// YodafyServidorIterativo
-// (CC) jjramos, 2012
-//
+/////
+// Aplicacion para el usuario del juego pasapalabra basado en TCP
+// Desarrollado por:
+//		Miguel Ángel López Robles
+// 		Jaime Frías Funes
+////////////
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,10 +18,6 @@ public class ClientePasapalabra {
 
 	public static void main(String[] args) {
 		
-		//byte []buferEnvio;
-		//byte []buferRecepcion=new byte[256];
-		//int bytesLeidos=0;
-		
 		// Nombre del host donde se ejecuta el servidor:
 		String host="localhost";
 		// Puerto en el que espera el servidor:
@@ -27,6 +25,7 @@ public class ClientePasapalabra {
 		
 		// Socket para la conexión TCP
 		Socket socketServicio=null;
+		//scanner para tomar las respuestas de la terminal
 		Scanner capt = new Scanner(System.in);
 
 		try {
@@ -40,42 +39,34 @@ public class ClientePasapalabra {
 			(new InputStreamReader(socketServicio.getInputStream()));
 			PrintWriter outPrinter = new PrintWriter(socketServicio.getOutputStream(),true);
 
-			// Si queremos enviar una cadena de caracteres por un OutputStream, hay que pasarla primero
-			// a un array de bytes:
-			//buferEnvio="Al monte del volcán debes ir sin demora".getBytes();
-			
-			// Enviamos el array por el outputStream;
-			//////////////////////////////////////////////////////
-			// ... .write ... (Completar)
+			// enviamos el codigo play para indicar que deseamos jugar y que se inicie el servicio
 			outPrinter.println("play");
 			//////////////////////////////////////////////////////
-			
-			// Aunque le indiquemos a TCP que queremos enviar varios arrays de bytes, sólo
-			// los enviará efectivamente cuando considere que tiene suficientes datos que enviar...
-			// Podemos usar "flush()" para obligar a TCP a que no espere para hacer el envío:
-			//////////////////////////////////////////////////////
-			// ... .flush(); (Completar)
 			outPrinter.flush();
 			//////////////////////////////////////////////////////
-
+			// recibimos el mensaje de respuesta del servidor indicando que atiende nuestra peticion
 			String recibido = inReader.readLine();
 			//System.out.println(recibido);
+			//el mensaje recibido debe ser comenzemos
 			if(recibido.equals("comenzemos")){
 				System.out.println("COMIENZA EL JUEGO");
 				while(!recibido.equals("FIN DEL JUEGO")){
-					//imprimir rosco
+					//imprimir rosco que lo formaremos leyendo lineas del flujo de datos
 					String rosco="";
 					for(int i = 0 ; i <=14 ; i++){
 						rosco += inReader.readLine();
 						rosco+= "\n";
 					}
 					System.out.println(rosco);
+
 					//imprimir pregunta
 					System.out.println(inReader.readLine());
+
 					//captar y enviar respuesta
 					String respuesta = capt.nextLine();
 					System.out.println(respuesta);
 					outPrinter.println(respuesta);
+
 					//imprimir resultado
 					recibido = inReader.readLine();
 					System.out.println(recibido);
@@ -85,15 +76,8 @@ public class ClientePasapalabra {
 
 
 			}
-			
-			// Leemos la respuesta del servidor. Para ello le pasamos un array de bytes, que intentará
-			// rellenar. El método "read(...)" devolverá el número de bytes leídos.
-			//////////////////////////////////////////////////////
-			// bytesLeidos ... .read... buferRecepcion ; (Completar)
-			//bytesLeidos = inputStream.read(buferRecepcion);
-			//////////////////////////////////////////////////////
-			
-			// MOstremos la cadena de caracteres recibidos:
+		
+			// Por ultimo el recibimos el rosco por ultima vez y el resultado final de este:
 			System.out.println("El resultado del rosco es: ");
 			String rosco="";
 			for(int i = 0 ; i <=14 ; i++){
@@ -105,10 +89,7 @@ public class ClientePasapalabra {
 			System.out.println(inReader.readLine());
 			//}
 			
-			// Una vez terminado el servicio, cerramos el socket (automáticamente se cierran
-			// el inpuStream  y el outputStream)
-			//////////////////////////////////////////////////////
-			// ... close(); (Completar)
+			// Una vez terminado el servicio, cerramos el socket
 			socketServicio.close();
 			//////////////////////////////////////////////////////
 			

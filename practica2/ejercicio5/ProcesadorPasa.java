@@ -18,7 +18,7 @@ import java.util.ArrayList;
 // Nota: si esta clase extendiera la clase Thread, y el procesamiento lo hiciera el método "run()",
 // ¡Podríamos realizar un procesado concurrente!
 //
-public class ProcesadorYodafy extends Thread {
+public class ProcesadorPasa extends Thread {
 	// Referencia a un socket para enviar/recibir las peticiones/respuestas
 	private Socket socketServicio;
 	// stream de lectura (por aquí se recibe lo que envía el cliente)
@@ -36,7 +36,7 @@ public class ProcesadorYodafy extends Thread {
 	private int acertadas=0;
 
 	// Constructor que tiene como parámetro una referencia al socket abierto en por otra clase
-	public ProcesadorYodafy(Socket socketServicio) {
+	public ProcesadorPasa(Socket socketServicio) {
 		this.socketServicio=socketServicio;
 		definiciones = new ArrayList<String>();
 		respuestas = new ArrayList<String>();
@@ -251,12 +251,12 @@ public class ProcesadorYodafy extends Thread {
 			for (int j = 0; j < 2*i+1; ++j){
 				//Condición para imprimir solo los bordes.
 				if (i==0){
-					rosco += 'A';
+					rosco += estadoPregunta(0);
 				}
 				else if(j==0) {
-					rosco += convierteLetra(25-(i+1));	
+					rosco += estadoPregunta(25-(i+1));	
 				} else if(j==2*i){
-					rosco += convierteLetra(i);
+					rosco += estadoPregunta(i);
 				}	
 				else {
 					rosco+= " ";
@@ -274,13 +274,13 @@ public class ProcesadorYodafy extends Thread {
             for (int i = 0; i < 2*j+1; ++i) {
                 //Condición para imprimir solo los bordes.
 				if (j==0){
-					rosco += 'N';
+					rosco += estadoPregunta(14);
 				}
 				else if(i==0){
-					rosco += convierteLetra(25-(cont+1));
+					rosco += estadoPregunta(25-(cont+1));
 				}
 				else if(i==2*j) {
-                    rosco += convierteLetra(cont);
+                    rosco += estadoPregunta(cont);
                 } else {
                     rosco+= " ";
                 }                
@@ -289,6 +289,15 @@ public class ProcesadorYodafy extends Thread {
         }    
 		rosco+= "\n";
 		return rosco;
+	}
+
+	private char estadoPregunta(int puntero){
+		if(contestadas.get(puntero) == 1)
+			return '1';
+		else if(contestadas.get(puntero) == 2)
+			return '0';
+		else 
+			return convierteLetra(puntero);
 	}
 }
 
